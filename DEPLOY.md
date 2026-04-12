@@ -35,12 +35,21 @@ When prompted:
 
 After deploy, go to **Vercel Dashboard → aurakeys-backend → Settings → Environment Variables**
 
-Add these two:
+Add these:
 
 | Name               | Value                          |
 |--------------------|--------------------------------|
 | `MONGODB_URI`      | your MongoDB Atlas connection string |
 | `ADMIN_PASSWORD`   | a strong password for admin dashboard |
+| `GROQ_KEY_1`       | your first free Groq API key |
+| `GROQ_KEY_2`       | your second free Groq API key |
+| `GROQ_KEY_3`       | third key (optional, add more for higher limits) |
+
+**Groq free keys kaise banayein:**
+1. groq.com pe free account banao
+2. API Keys section mein jaao → Create key
+3. Har account pe 14,400 requests/day milte hain
+4. 5 keys = 72,000 requests/day (kaafi hai normal usage ke liye)
 
 Then redeploy: `vercel deploy --prod`
 
