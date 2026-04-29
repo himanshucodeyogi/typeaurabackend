@@ -1,6 +1,6 @@
 // Developed by Himanshu Kashyap
 // POST /api/track
-// Receives device info + batched events from the AuraKeys Android app.
+// Receives device info + batched events from the TypeAura Android app.
 // Body: { device: { device_id, device_name, android_version, install_date, last_use_date },
 //         events: [{ device_id, event_type, timestamp, metadata? }] }
 

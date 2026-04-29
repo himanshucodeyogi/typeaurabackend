@@ -1,4 +1,4 @@
-# AuraKeys Backend — Vercel Deploy Guide
+# TypeAura Backend — Vercel Deploy Guide
 
 ## Step 1: MongoDB Atlas setup (free)
 
@@ -27,13 +27,13 @@ When prompted:
 - Set up and deploy: **Y**
 - Which scope: select your account
 - Link to existing project: **N**
-- Project name: `aurakeys-backend`
+- Project name: `typeaura-backend`
 - In which directory: **./  (current)**
 - Override settings: **N**
 
 ## Step 3: Set Environment Variables on Vercel
 
-After deploy, go to **Vercel Dashboard → aurakeys-backend → Settings → Environment Variables**
+After deploy, go to **Vercel Dashboard → typeaura-backend → Settings → Environment Variables**
 
 Add these:
 
@@ -58,16 +58,16 @@ Then redeploy: `vercel deploy --prod`
 In your `.env` file (project root), add:
 ```
 GROQ_API_KEY=your_existing_key
-ANALYTICS_BACKEND_URL=https://aurakeys-backend.vercel.app
+ANALYTICS_BACKEND_URL=https://typeaura-backend.vercel.app
 ```
 
-Replace `aurakeys-backend.vercel.app` with your actual Vercel URL.
+Replace `typeaura-backend.vercel.app` with your actual Vercel URL.
 
 ## Step 5: Update website
 
 In `website/app.js`, set:
 ```js
-const BACKEND_URL = 'https://aurakeys-backend.vercel.app';
+const BACKEND_URL = 'https://typeaura-backend.vercel.app';
 ```
 
 ## API Endpoints
