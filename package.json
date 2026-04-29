@@ -1,7 +1,7 @@
 {
-  "name": "aurakeys-backend",
+  "name": "typeaura-backend",
   "version": "1.0.0",
-  "description": "AuraKeys analytics backend — Vercel serverless + MongoDB Atlas",
+  "description": "TypeAura analytics backend — Vercel serverless + MongoDB Atlas",
   "private": true,
   "engines": {
     "node": ">=18"
