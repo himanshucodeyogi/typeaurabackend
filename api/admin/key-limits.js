@@ -6,8 +6,26 @@ const crypto                = require('crypto');
 const { connectToDatabase } = require('../../lib/db');
 const { requireAdmin }      = require('../../lib/auth');
 
+const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+const MODEL    = 'llama-3.3-70b-versatile';
+
 function keyHash(key) {
   return crypto.createHash('sha256').update(key).digest('hex').slice(0, 16);
+}
+
+async function checkKeyValidity(key) {
+  try {
+    const res = await fetch(GROQ_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+      body: JSON.stringify({ model: MODEL, messages: [{ role: 'user', content: 'Hi' }], max_tokens: 1 }),
+    });
+    if (res.ok || res.status === 429) return 'valid';
+    if (res.status === 401) return 'invalid';
+    return 'valid';
+  } catch {
+    return 'valid';
+  }
 }
 
 module.exports = async function handler(req, res) {
@@ -22,9 +40,12 @@ module.exports = async function handler(req, res) {
 
     // ── GET: return block status for all keys ────────────────
     if (req.method === 'GET') {
-      const blocks = await db.collection('groq_key_blocks')
-        .find({}, { projection: { key_hash: 1, blocked_until: 1 } })
-        .toArray();
+      const [blocks, validityResults] = await Promise.all([
+        db.collection('groq_key_blocks')
+          .find({}, { projection: { key_hash: 1, blocked_until: 1 } })
+          .toArray(),
+        Promise.all(rawKeys.map(checkKeyValidity)),
+      ]);
 
       const blockMap = new Map(blocks.map(b => [b.key_hash, b.blocked_until]));
       const now      = new Date();
@@ -33,12 +54,19 @@ module.exports = async function handler(req, res) {
         const hash         = keyHash(k);
         const blockedUntil = blockMap.get(hash);
         const isBlocked    = !!blockedUntil && new Date(blockedUntil) > now;
+        const isInvalid    = validityResults[i] === 'invalid';
+
+        let status;
+        if (isBlocked)       status = 'blocked';
+        else if (isInvalid)  status = 'invalid';
+        else                 status = 'available';
+
         return {
           index:         i + 1,
           name:          `Key ${i + 1}`,
           masked:        k.slice(0, 7) + '••••••••••••' + k.slice(-4),
           key_hash:      hash,
-          status:        isBlocked ? 'blocked' : 'available',
+          status,
           blocked_until: isBlocked ? blockedUntil : null,
         };
       });
