@@ -63,7 +63,7 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST')   return res.status(405).json({ error: 'Method not allowed' });
 
-  const { messages, temperature = 0.7, max_tokens } = req.body || {};
+  const { messages, temperature = 0.7, max_tokens, response_format } = req.body || {};
 
   if (!Array.isArray(messages) || messages.length === 0) {
     return res.status(400).json({ error: 'messages array required' });
@@ -93,6 +93,7 @@ module.exports = async function handler(req, res) {
 
   const body = { model: MODEL, messages, temperature };
   if (max_tokens) body.max_tokens = max_tokens;
+  if (response_format) body.response_format = response_format;
 
   for (const key of available) {
     const controller = new AbortController();
