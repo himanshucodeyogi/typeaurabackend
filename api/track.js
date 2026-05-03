@@ -39,6 +39,7 @@ module.exports = async function handler(req, res) {
         total_app_opens:      inc.total_app_opens      || 0,
         total_keyboard_opens: inc.total_keyboard_opens || 0,
         total_ai_uses:        inc.total_ai_uses        || 0,
+        total_voice_ai_uses:  inc.total_voice_ai_uses  || 0,
       },
     };
 
@@ -77,6 +78,7 @@ function buildIncrements(events) {
     if (e.event_type === 'app_open')        inc.total_app_opens      = (inc.total_app_opens      || 0) + 1;
     if (e.event_type === 'keyboard_opened') inc.total_keyboard_opens = (inc.total_keyboard_opens || 0) + 1;
     if (e.event_type === 'ai_used')         inc.total_ai_uses        = (inc.total_ai_uses        || 0) + 1;
+    if (e.event_type === 'voice_ai')        inc.total_voice_ai_uses  = (inc.total_voice_ai_uses  || 0) + 1;
   }
   return inc;
 }
